@@ -1,0 +1,7 @@
+MAE
+- Users based: 0.7623507598389264
+- Items based: 0.7766893640910639
+
+RMSE:
+- Users based: 0.9619048699917635
+- Items based: 0.9756764446945198

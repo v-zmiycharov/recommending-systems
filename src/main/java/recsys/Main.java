@@ -8,6 +8,7 @@ import java.util.List;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.eval.AverageAbsoluteDifferenceRecommenderEvaluator;
+import org.apache.mahout.cf.taste.impl.eval.RMSRecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
 import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
@@ -27,50 +28,66 @@ public class Main {
 		File file = new File(Main.class.getResource("/ml-1m/ratings.dat").toURI());
 		DataModel model = new FileDataModel(file, "::");
 		
-		double userBasedResult = evaluateUsersSimilarity(model);
-		double itemsBasedResult = evaluateItemsSimilarity(model);
+		EvalResult userBasedResult = evaluateUsersSimilarity(model);
+		EvalResult itemsBasedResult = evaluateItemsSimilarity(model);
 	}
 	
-	private static double evaluateUsersSimilarity(DataModel model) throws Exception {
+	private static EvalResult evaluateUsersSimilarity(DataModel model) throws Exception {
+		EvalResult result = new EvalResult();
+		
 		if(true) {
-			return 0.7660529893489104;
+			result.setMAEResult(0.7623507598389264);
+			result.setRMSEResult(0.9619048699917635);
+			
+			return result;
 		}
 		
 		UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
 		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
 		UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
 		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
-		for (RecommendedItem recommendation : recommendations) {
-		  System.out.println(recommendation);
-		}
-		
-		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		RecommenderBuilder builder = new UserRecommenderBuilder();
-		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println(result);
 
-		// 0.7660529893489104
+		RecommenderBuilder builder = new UserRecommenderBuilder();
+
+		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
+		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("Users based MAE: " + MAEresult);
+		result.setMAEResult(MAEresult);
+
+		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
+		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("Users based RMSE: " + RMSEresult);
+		result.setRMSEResult(RMSEresult);
+
 		return result;
 	}
 
-	private static double evaluateItemsSimilarity(DataModel model) throws Exception {
+	private static EvalResult evaluateItemsSimilarity(DataModel model) throws Exception {
+		EvalResult result = new EvalResult();
+		
 		if(true) {
-			return 0.7758837035380164;
+			result.setMAEResult(0.7766893640910639);
+			result.setRMSEResult(0.9756764446945198);
+			
+			return result;
 		}
 		
 		ItemSimilarity similarity = new PearsonCorrelationSimilarity(model);
 		ItemBasedRecommender recommender = new GenericItemBasedRecommender(model, similarity);
 		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
-		for (RecommendedItem recommendation : recommendations) {
-		  System.out.println(recommendation);
-		}
-		
-		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		RecommenderBuilder builder = new ItemRecommenderBuilder();
-		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println(result);
 
-		// 0.7758837035380164
+		RecommenderBuilder builder = new ItemRecommenderBuilder();
+
+		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
+		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("Items based MAE: " + MAEresult);
+		result.setMAEResult(MAEresult);
+
+		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
+		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("Items based RMSE: " + RMSEresult);
+		result.setRMSEResult(RMSEresult);
+
 		return result;
 	}
 
