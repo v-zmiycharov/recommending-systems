@@ -27,6 +27,7 @@ import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 import org.apache.mahout.cf.taste.impl.recommender.svd.RatingSGDFactorizer;
+import org.apache.mahout.cf.taste.impl.recommender.svd.SVDPlusPlusFactorizer;
 
 public class Main {
 
@@ -37,6 +38,7 @@ public class Main {
 		EvalResult userBasedResult = evaluateUsersBasedError(model);
 		EvalResult itemsBasedResult = evaluateItemsBasedError(model);
 		EvalResult svdBasedResult = evaluateSvdError(model);
+		EvalResult svdPlusPlusBasedResult = evaluateSvdPlusPlusError(model);
 	}
 	
 	private static EvalResult evaluateUsersBasedError(DataModel model) throws Exception {
@@ -124,6 +126,36 @@ public class Main {
 		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
 		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
 		System.out.println("SVD RMSE: " + RMSEresult);
+		result.setRMSEResult(RMSEresult);
+
+		return result;
+	}
+
+
+	private static EvalResult evaluateSvdPlusPlusError(DataModel model) throws Exception {
+		EvalResult result = new EvalResult();
+		
+		if(true) {
+			// result.setMAEResult(0.8795674973245713);
+			// result.setRMSEResult(1.058581768277962);
+			
+			// return result;
+		}
+
+		RecommenderBuilder builder = new RecommenderBuilder() {
+            public Recommender buildRecommender(DataModel dataModel) throws TasteException {
+        		return new SVDRecommender(dataModel, new SVDPlusPlusFactorizer(dataModel,4,100));
+            }
+        };;
+
+		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
+		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("SVD++ MAE: " + MAEresult);
+		result.setMAEResult(MAEresult);
+
+		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
+		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println("SVD++ RMSE: " + RMSEresult);
 		result.setRMSEResult(RMSEresult);
 
 		return result;
