@@ -39,6 +39,20 @@ public class Main {
 		EvalResult itemsBasedResult = evaluateItemsBasedError(model);
 		EvalResult svdBasedResult = evaluateSvdError(model);
 		EvalResult svdPlusPlusBasedResult = evaluateSvdPlusPlusError(model);
+		
+		System.out.println("MAE:");
+		System.out.println("- Users based: " + userBasedResult.getMAEResult());
+		System.out.println("- Items based: " + itemsBasedResult.getMAEResult());
+		System.out.println("- SVD: " + svdBasedResult.getMAEResult());
+		System.out.println("- SVD++: " + svdPlusPlusBasedResult.getMAEResult());
+		
+		System.out.println("");
+
+		System.out.println("RMSE:");
+		System.out.println("- Users based: " + userBasedResult.getRMSEResult());
+		System.out.println("- Items based: " + itemsBasedResult.getRMSEResult());
+		System.out.println("- SVD: " + svdBasedResult.getRMSEResult());
+		System.out.println("- SVD++: " + svdPlusPlusBasedResult.getRMSEResult());
 	}
 	
 	private static EvalResult evaluateUsersBasedError(DataModel model) throws Exception {
