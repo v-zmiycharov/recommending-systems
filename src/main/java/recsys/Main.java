@@ -32,12 +32,12 @@ public class Main {
 		File file = new File(Main.class.getResource("/ml-1m/ratings.dat").toURI());
 		DataModel model = new FileDataModel(file, "::");
 		
-		EvalResult userBasedResult = evaluateUsersSimilarity(model);
-		EvalResult itemsBasedResult = evaluateItemsSimilarity(model);
-		EvalResult svdBasedResult = evaluateSvdSimilarity(model);
+		EvalResult userBasedResult = evaluateUsersBasedError(model);
+		EvalResult itemsBasedResult = evaluateItemsBasedError(model);
+		EvalResult svdBasedResult = evaluateSvdError(model);
 	}
 	
-	private static EvalResult evaluateUsersSimilarity(DataModel model) throws Exception {
+	private static EvalResult evaluateUsersBasedError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
 		if(true) {
@@ -62,7 +62,7 @@ public class Main {
 		return result;
 	}
 
-	private static EvalResult evaluateItemsSimilarity(DataModel model) throws Exception {
+	private static EvalResult evaluateItemsBasedError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
 		if(true) {
@@ -87,7 +87,7 @@ public class Main {
 		return result;
 	}
 
-	private static EvalResult evaluateSvdSimilarity(DataModel model) throws Exception {
+	private static EvalResult evaluateSvdError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
 		if(true) {
