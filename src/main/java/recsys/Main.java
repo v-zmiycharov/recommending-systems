@@ -44,29 +44,20 @@ public class Main {
 	private static EvalResult evaluateUsersBasedError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
-		if(true) {
-			result.setMAEResult(0.7623507598389264);
-			result.setRMSEResult(0.9619048699917635);
-			
-			return result;
-		}
-		
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
             	UserSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
         		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, dataModel);
         		return new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
             }
-        };;
+        };
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("Users based MAE: " + MAEresult);
 		result.setMAEResult(MAEresult);
 
 		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
 		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("Users based RMSE: " + RMSEresult);
 		result.setRMSEResult(RMSEresult);
 
 		return result;
@@ -75,28 +66,19 @@ public class Main {
 	private static EvalResult evaluateItemsBasedError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
-		if(true) {
-			result.setMAEResult(0.7766893640910639);
-			result.setRMSEResult(0.9756764446945198);
-			
-			return result;
-		}
-
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
             	ItemSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
         		return new GenericItemBasedRecommender(dataModel, similarity);
             }
-        };;
+        };
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("Items based MAE: " + MAEresult);
 		result.setMAEResult(MAEresult);
 
 		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
 		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("Items based RMSE: " + RMSEresult);
 		result.setRMSEResult(RMSEresult);
 
 		return result;
@@ -104,28 +86,19 @@ public class Main {
 
 	private static EvalResult evaluateSvdError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
-		
-		if(true) {
-			result.setMAEResult(0.8795674973245713);
-			result.setRMSEResult(1.058581768277962);
 			
-			return result;
-		}
-
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
         		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,30,0.065,100));
             }
-        };;
+        };
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("SVD MAE: " + MAEresult);
 		result.setMAEResult(MAEresult);
 
 		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
 		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("SVD RMSE: " + RMSEresult);
 		result.setRMSEResult(RMSEresult);
 
 		return result;
@@ -135,27 +108,18 @@ public class Main {
 	private static EvalResult evaluateSvdPlusPlusError(DataModel model) throws Exception {
 		EvalResult result = new EvalResult();
 		
-		if(true) {
-			// result.setMAEResult(0.8795674973245713);
-			// result.setRMSEResult(1.058581768277962);
-			
-			// return result;
-		}
-
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
         		return new SVDRecommender(dataModel, new SVDPlusPlusFactorizer(dataModel,30,100));
             }
-        };;
+        };
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("SVD++ MAE: " + MAEresult);
 		result.setMAEResult(MAEresult);
 
 		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
 		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		System.out.println("SVD++ RMSE: " + RMSEresult);
 		result.setRMSEResult(RMSEresult);
 
 		return result;
