@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
 
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.apache.mahout.cf.taste.eval.RecommenderBuilder;
 import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.eval.AverageAbsoluteDifferenceRecommenderEvaluator;
@@ -21,6 +22,7 @@ import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
 import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
+import org.apache.mahout.cf.taste.recommender.Recommender;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
 import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
@@ -47,7 +49,13 @@ public class Main {
 			return result;
 		}
 		
-		RecommenderBuilder builder = new UserRecommenderBuilder();
+		RecommenderBuilder builder = new RecommenderBuilder() {
+            public Recommender buildRecommender(DataModel dataModel) throws TasteException {
+            	UserSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
+        		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, dataModel);
+        		return new GenericUserBasedRecommender(dataModel, neighborhood, similarity);
+            }
+        };;
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
@@ -71,8 +79,13 @@ public class Main {
 			
 			return result;
 		}
-		
-		RecommenderBuilder builder = new ItemRecommenderBuilder();
+
+		RecommenderBuilder builder = new RecommenderBuilder() {
+            public Recommender buildRecommender(DataModel dataModel) throws TasteException {
+            	ItemSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
+        		return new GenericItemBasedRecommender(dataModel, similarity);
+            }
+        };;
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
@@ -96,8 +109,12 @@ public class Main {
 			
 			return result;
 		}
-		
-		RecommenderBuilder builder = new SVDRecommenderBuilder();
+
+		RecommenderBuilder builder = new RecommenderBuilder() {
+            public Recommender buildRecommender(DataModel dataModel) throws TasteException {
+        		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,4,0.5,30));
+            }
+        };;
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
