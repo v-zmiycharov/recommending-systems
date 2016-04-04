@@ -42,7 +42,6 @@ public class Main {
 	}
 	
 	private static EvalResult evaluateUsersBasedError(DataModel model) throws Exception {
-		EvalResult result = new EvalResult();
 		
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
@@ -52,20 +51,10 @@ public class Main {
             }
         };
 
-		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setMAEResult(MAEresult);
-
-		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
-		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setRMSEResult(RMSEresult);
-
-		return result;
+		return getEvalResult(model, builder);
 	}
 
 	private static EvalResult evaluateItemsBasedError(DataModel model) throws Exception {
-		EvalResult result = new EvalResult();
-		
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
             	ItemSimilarity similarity = new PearsonCorrelationSimilarity(dataModel);
@@ -73,56 +62,50 @@ public class Main {
             }
         };
 
-		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setMAEResult(MAEresult);
-
-		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
-		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setRMSEResult(RMSEresult);
-
-		return result;
+		return getEvalResult(model, builder);
 	}
 
 	private static EvalResult evaluateSvdError(DataModel model) throws Exception {
-		EvalResult result = new EvalResult();
-			
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
         		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,30,0.065,100));
             }
         };
 
-		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setMAEResult(MAEresult);
-
-		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
-		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setRMSEResult(RMSEresult);
-
-		return result;
+		return getEvalResult(model, builder);
 	}
 
-
 	private static EvalResult evaluateSvdPlusPlusError(DataModel model) throws Exception {
-		EvalResult result = new EvalResult();
-		
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
         		return new SVDRecommender(dataModel, new SVDPlusPlusFactorizer(dataModel,30,100));
             }
         };
 
-		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		double MAEresult = MAEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setMAEResult(MAEresult);
-
-		RecommenderEvaluator RMSEevaluator = new RMSRecommenderEvaluator();
-		double RMSEresult = RMSEevaluator.evaluate(builder, null, model, 0.9, 1.0);
-		result.setRMSEResult(RMSEresult);
-
+		return getEvalResult(model, builder);
+	}
+	
+	private static EvalResult getEvalResult(DataModel model
+			, RecommenderBuilder builder) throws Exception {
+		EvalResult result = new EvalResult();
+		result.setMAEResult(evaluateMAEError(model, builder));
+		result.setRMSEResult(evaluateRMSEError(model, builder));
 		return result;
 	}
 
+	private static double evaluateMAEError(DataModel model
+			, RecommenderBuilder builder) throws Exception {
+		return evaluateError(model, builder, new AverageAbsoluteDifferenceRecommenderEvaluator());
+	}
+
+	private static double evaluateRMSEError(DataModel model
+			, RecommenderBuilder builder) throws Exception {
+		return evaluateError(model, builder, new RMSRecommenderEvaluator());
+	}
+
+	private static double evaluateError(DataModel model
+			, RecommenderBuilder builder
+			, RecommenderEvaluator evaluator) throws Exception {
+		return evaluator.evaluate(builder, null, model, 0.9, 1.0);
+	}
 }
