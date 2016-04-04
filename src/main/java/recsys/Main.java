@@ -35,6 +35,7 @@ public class Main {
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		RecommenderBuilder builder = new MyRecommenderBuilder();
 		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
+		// 0.7660529893489104 user based
 		System.out.println(result);
 	}
 
