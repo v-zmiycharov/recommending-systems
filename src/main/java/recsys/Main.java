@@ -10,12 +10,15 @@ import org.apache.mahout.cf.taste.eval.RecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.eval.AverageAbsoluteDifferenceRecommenderEvaluator;
 import org.apache.mahout.cf.taste.impl.model.file.FileDataModel;
 import org.apache.mahout.cf.taste.impl.neighborhood.ThresholdUserNeighborhood;
+import org.apache.mahout.cf.taste.impl.recommender.GenericItemBasedRecommender;
 import org.apache.mahout.cf.taste.impl.recommender.GenericUserBasedRecommender;
 import org.apache.mahout.cf.taste.impl.similarity.PearsonCorrelationSimilarity;
 import org.apache.mahout.cf.taste.model.DataModel;
 import org.apache.mahout.cf.taste.neighborhood.UserNeighborhood;
+import org.apache.mahout.cf.taste.recommender.ItemBasedRecommender;
 import org.apache.mahout.cf.taste.recommender.RecommendedItem;
 import org.apache.mahout.cf.taste.recommender.UserBasedRecommender;
+import org.apache.mahout.cf.taste.similarity.ItemSimilarity;
 import org.apache.mahout.cf.taste.similarity.UserSimilarity;
 
 public class Main {
@@ -25,6 +28,7 @@ public class Main {
 		DataModel model = new FileDataModel(file, "::");
 		
 		double userBasedResult = evaluateUsersSimilarity(model);
+		double itemsBasedResult = evaluateItemsSimilarity(model);
 	}
 	
 	private static double evaluateUsersSimilarity(DataModel model) throws Exception {
@@ -41,11 +45,32 @@ public class Main {
 		}
 		
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
-		RecommenderBuilder builder = new MyRecommenderBuilder();
+		RecommenderBuilder builder = new UserRecommenderBuilder();
 		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
 		System.out.println(result);
 
 		// 0.7660529893489104
+		return result;
+	}
+
+	private static double evaluateItemsSimilarity(DataModel model) throws Exception {
+		if(true) {
+			return 0.7758837035380164;
+		}
+		
+		ItemSimilarity similarity = new PearsonCorrelationSimilarity(model);
+		ItemBasedRecommender recommender = new GenericItemBasedRecommender(model, similarity);
+		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
+		for (RecommendedItem recommendation : recommendations) {
+		  System.out.println(recommendation);
+		}
+		
+		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
+		RecommenderBuilder builder = new ItemRecommenderBuilder();
+		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
+		System.out.println(result);
+
+		// 0.7758837035380164
 		return result;
 	}
 
