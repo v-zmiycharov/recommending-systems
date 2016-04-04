@@ -24,6 +24,14 @@ public class Main {
 		File file = new File(Main.class.getResource("/ml-1m/ratings.dat").toURI());
 		DataModel model = new FileDataModel(file, "::");
 		
+		double userBasedResult = evaluateUsersSimilarity(model);
+	}
+	
+	private static double evaluateUsersSimilarity(DataModel model) throws Exception {
+		if(true) {
+			return 0.7660529893489104;
+		}
+		
 		UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
 		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
 		UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
@@ -35,8 +43,10 @@ public class Main {
 		RecommenderEvaluator evaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
 		RecommenderBuilder builder = new MyRecommenderBuilder();
 		double result = evaluator.evaluate(builder, null, model, 0.9, 1.0);
-		// 0.7660529893489104 user based
 		System.out.println(result);
+
+		// 0.7660529893489104
+		return result;
 	}
 
 }
