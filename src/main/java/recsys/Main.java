@@ -114,7 +114,7 @@ public class Main {
 
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
-        		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,4,0.5,100));
+        		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,30,0.065,100));
             }
         };;
 
@@ -144,7 +144,7 @@ public class Main {
 
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
-        		return new SVDRecommender(dataModel, new SVDPlusPlusFactorizer(dataModel,4,100));
+        		return new SVDRecommender(dataModel, new SVDPlusPlusFactorizer(dataModel,30,100));
             }
         };;
 
