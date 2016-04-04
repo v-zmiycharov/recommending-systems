@@ -3,6 +3,7 @@ package recsys;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.mahout.cf.taste.common.TasteException;
@@ -36,9 +37,19 @@ public class Main {
 		DataModel model = new FileDataModel(file, "::");
 		
 		EvalResult userBasedResult = evaluateUsersBasedError(model);
+		System.out.println("Users based finished!" +  new Date().toString());
+		
 		EvalResult itemsBasedResult = evaluateItemsBasedError(model);
+		System.out.println("Items based finished!" +  new Date().toString());
+		
 		EvalResult svdBasedResult = evaluateSvdError(model);
+		System.out.println("SVD finished!" +  new Date().toString());
+
 		EvalResult svdPlusPlusBasedResult = evaluateSvdPlusPlusError(model);
+		System.out.println("SVD++ finished!" +  new Date().toString());
+
+		System.out.println("");
+		System.out.println("");
 		
 		System.out.println("MAE:");
 		System.out.println("- Users based: " + userBasedResult.getMAEResult());
