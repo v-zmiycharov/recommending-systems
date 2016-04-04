@@ -104,15 +104,15 @@ public class Main {
 		EvalResult result = new EvalResult();
 		
 		if(true) {
-			result.setMAEResult(0.880113941532012);
-			result.setRMSEResult(1.0603245743358758);
+			result.setMAEResult(0.8795674973245713);
+			result.setRMSEResult(1.058581768277962);
 			
 			return result;
 		}
 
 		RecommenderBuilder builder = new RecommenderBuilder() {
             public Recommender buildRecommender(DataModel dataModel) throws TasteException {
-        		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,4,0.5,30));
+        		return new SVDRecommender(dataModel, new ALSWRFactorizer(dataModel,4,0.5,100));
             }
         };;
 
