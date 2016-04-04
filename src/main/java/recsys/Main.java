@@ -47,11 +47,6 @@ public class Main {
 			return result;
 		}
 		
-		UserSimilarity similarity = new PearsonCorrelationSimilarity(model);
-		UserNeighborhood neighborhood = new ThresholdUserNeighborhood(0.1, similarity, model);
-		UserBasedRecommender recommender = new GenericUserBasedRecommender(model, neighborhood, similarity);
-		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
-
 		RecommenderBuilder builder = new UserRecommenderBuilder();
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
@@ -77,10 +72,6 @@ public class Main {
 			return result;
 		}
 		
-		ItemSimilarity similarity = new PearsonCorrelationSimilarity(model);
-		ItemBasedRecommender recommender = new GenericItemBasedRecommender(model, similarity);
-		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
-
 		RecommenderBuilder builder = new ItemRecommenderBuilder();
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
@@ -106,10 +97,6 @@ public class Main {
 			return result;
 		}
 		
-		SVDRecommender recommender= new SVDRecommender(model,
-				new ALSWRFactorizer(model,4,0.5,30));
-		List<RecommendedItem> recommendations = recommender.recommend(2, 3);
-
 		RecommenderBuilder builder = new SVDRecommenderBuilder();
 
 		RecommenderEvaluator MAEevaluator = new AverageAbsoluteDifferenceRecommenderEvaluator();
